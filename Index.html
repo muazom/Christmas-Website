@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merry Christmas</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        christmas: ['"Mountains of Christmas"', 'cursive']
+      },
+      animation: {
+        glow: 'glow 3s ease-in-out infinite',
+        float: 'float 7s ease-in-out infinite',
+        sway: 'sway 5s ease-in-out infinite',
+        twinkle: 'twinkle 2s infinite alternate'
+      },
+      keyframes: {
+        glow: {
+          '0%,100%': { boxShadow: '0 0 25px rgba(255,255,255,.35)' },
+          '50%': { boxShadow: '0 0 70px rgba(255,200,150,.9)' }
+        },
+        float: {
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-14px)' }
+        },
+        sway: {
+          '0%,100%': { transform: 'rotate(-2deg)' },
+          '50%': { transform: 'rotate(2deg)' }
+        },
+        twinkle: {
+          '0%': { opacity: .3 },
+          '100%': { opacity: 1 }
+        }
+      }
+    }
+  }
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  font-family: 'Mountains of Christmas', cursive;
+  letter-spacing: .04em;
+}
+
+:root { --glass: rgba(255,255,255,.22); }
+
+.snow {
+  position: fixed;
+  top: -10px;
+  pointer-events: none;
+  animation: fall linear infinite;
+}
+
+@keyframes fall { to { transform: translateY(115vh); } }
+
+.tree {
+  position: fixed;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  z-index: 0;
+}
+
+.tree div {
+  margin: auto;
+  width: 0;
+  height: 0;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-bottom: 140px solid #0f5132;
+}
+
+.tree div:nth-child(2) {
+  margin-top: -90px;
+  border-bottom-color: #146c43;
+}
+
+.tree div:nth-child(3) {
+  margin-top: -90px;
+  border-bottom-color: #198754;
+}
+
+.star {
+  position: absolute;
+  top: -55px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 48px;
+  color: gold;
+  text-shadow: 0 0 25px gold;
+  animation: glow 2s infinite;
+}
+
+.light {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  animation: twinkle infinite alternate;
+}
+
+.fireplace {
+  position: fixed;
+  bottom: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 300px;
+  background: radial-gradient(circle at center, rgba(255,120,40,.6), transparent 70%);
+  filter: blur(40px);
+  animation: glow 2.5s infinite;
+  z-index: 0;
+}
+</style>
+</head>
+
+<body class="bg-gradient-to-br from-red-950 via-red-800 to-emerald-950 min-h-screen flex items-center justify-center text-white overflow-hidden">
+
+<div class="fireplace"></div>
+
+<div class="tree" id="tree">
+  <div></div>
+  <div></div>
+  <div></div>
+  <div class="star">★</div>
+
+  <span class="light bg-red-500 animate-twinkle" style="top:40%; left:45%; animation-duration:1.5s"></span>
+  <span class="light bg-yellow-300 animate-twinkle" style="top:55%; left:55%; animation-duration:2s"></span>
+  <span class="light bg-blue-400 animate-twinkle" style="top:60%; left:40%; animation-duration:1.2s"></span>
+  <span class="light bg-green-400 animate-twinkle" style="top:70%; left:50%; animation-duration:1.8s"></span>
+</div>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/12/19/audio_2f1c5a9f1f.mp3" type="audio/mpeg">
+</audio>
+
+<div id="card" class="relative z-10 bg-[var(--glass)] backdrop-blur-2xl rounded-[3rem] p-12 md:p-16 max-w-xl w-[92%] text-center animate-glow animate-float border border-white/20">
+  <h1 class="text-6xl md:text-7xl mb-6 font-bold drop-shadow-lg">Merry Christmas</h1>
+
+  <p class="text-lg md:text-xl mb-12 opacity-95">
+    Snow drifts softly. Lights shimmer warmly.<br>
+    Tonight feels magical
+  </p>
+
+  <button onclick="openGift()" class="bg-gradient-to-r from-red-600 to-emerald-600 px-14 py-5 rounded-full text-2xl shadow-[0_0_40px_rgba(255,200,150,.7)] hover:scale-105 transition">
+    Open Me
+  </button>
+</div>
+
+<div id="gift" class="hidden fixed inset-0 bg-black/85 flex items-center justify-center z-50">
+  <div class="bg-white text-red-900 rounded-[3rem] p-12 max-w-md w-[92%] text-center shadow-2xl">
+    <h2 class="text-5xl mb-8 font-bold">A Little Letter</h2>
+    <p id="letter" class="text-lg min-h-[200px]"></p>
+    <button onclick="closeGift()" class="mt-10 bg-red-700 hover:bg-red-800 text-white px-10 py-4 rounded-full">
+      Close
+    </button>
+  </div>
+</div>
+
+<script>
+const letterText =
+"Christmas isn’t just about lights or gifts.\n\nIt’s about warmth.\nIt’s about love.\nIt’s about moments that slow the world down.\n\nWherever you are tonight, may your heart feel full, calm, and safe.\n\nMerry Christmas 🤍";
+
+let letterIndex = 0;
+
+function typeLetter() {
+  const el = document.getElementById("letter");
+  if (letterIndex < letterText.length) {
+    el.textContent += letterText[letterIndex++];
+    setTimeout(typeLetter, 45);
+  }
+}
+
+function createSnow() {
+  const s = document.createElement("div");
+  s.className = "snow";
+  s.textContent = "❄";
+  s.style.left = Math.random() * innerWidth + "px";
+  s.style.fontSize = Math.random() * 22 + 12 + "px";
+  s.style.opacity = Math.random();
+  s.style.animationDuration = Math.random() * 4 + 4 + "s";
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 8000);
+}
+
+setInterval(createSnow, 120);
+
+function toggleMusic() {
+  const m = document.getElementById("music");
+  m.paused ? m.play() : m.pause();
+}
+
+function openGift() {
+  gift.classList.remove("hidden");
+  letter.textContent = "";
+  letterIndex = 0;
+  typeLetter();
+}
+
+function closeGift() {
+  gift.classList.add("hidden");
+}
+
+document.addEventListener("mousemove", e => {
+  const x = (e.clientX / innerWidth - 0.5) * 10;
+  const y = (e.clientY / innerHeight - 0.5) * 10;
+  card.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+window.addEventListener("deviceorientation", e => {
+  if (!e.gamma) return;
+  card.style.transform =
+    `translate(${e.gamma/2}px, ${e.beta/4}px)`;
+});
+</script>
+
+</body>
+</html>
